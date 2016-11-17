@@ -10,8 +10,8 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
-    const int NUM_INPUTS = 5;
-    const int NUM_OUTPUTS = 2;
+	const int NUM_INPUTS  = 5;	// ({x,y}, attck, def) * N warriors ? ==> 80?! //alternative idea: "heat map" + ({x,y}, attck, def) of current warrior
+    const int NUM_OUTPUTS = 2;	// 5? move forward/backard, left/rigt and attack.
 
     public int Trials;
     public float TrialDuration;
