@@ -1,0 +1,22 @@
+Game: Savage I
+
+POC: Will it work .- keep in thought
+
+hvordan har vi tænkt os at validere vores POC???
+10 spillere - spørgeskema efter
+
+mht test kan det også være tanker omkring hvilke tests der kunne ændres (hvad ville vi gøre med resurser)
+
+RAPPORT: GRUNDBASE - pensum trækker op eller ned
+
+
+BASERE RAPPORT PÅ EKSISTERENDE VIDEN - FIND TING DER MINDER OM OG SÆT I PERSPEKTIV
+
+vores poc er fint - men bekrymre os om: 
+
+HVIS DET BLIVER FOR SIMPELT SÅ ER DER IKKE NOK FOR SPILLEREN. SØRG FOR AT DET IKKE BLIVER BINÆRT
+
+
+IKKE EN EXCERSICE I GAMEDESIGN
+
+

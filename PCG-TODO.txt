@@ -1,0 +1,43 @@
+Determine the fitness function - success criteria:
+------------------------------------------------------------------------------------------------------
+combination of multiple things:
+'dangerLevel': 1v1=noDanger, 2v1=call ally or move away
+knowledge about entire grid, but the immeidately surrounding grid has more importance (/2, /3, /4 etc.)
+------------------------------------------------------------------------------------------------------
+
+What determines a 'turn'. What can the player do?
+------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------
+
+Confirm than UnityNEAT is working (Car experiment)
+------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------
+
+
+Create some diversity - what is the goal of the game:
+------------------------------------------------------------------------------------------------------
+success criteria: destroy enemy base (0 attackPower - X defensePower)
+2 bases on a grid
+10 warriors each
+	- attack / defense
+warriors move individually
+chance/dmg-range to hit (more precisely: 10 attackPower= 1-10 dmg per hit)
+power-UPs on the grid
+------------------------------------------------------------------------------------------------------
+
+
+information:
+------------------------------------------------------------------------------------------------------
+Combined stats of each side, location (distance), position of enemies, position of allies
+------------------------------------------------------------------------------------------------------
+
+
+
+TODO:
+- UnityNEAT
+- think about NN input/output
+- think how to calculate fitness function
+- design some power-UPs
+- determine what you can do in a turn
