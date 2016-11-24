@@ -10,8 +10,8 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
-	const int NUM_INPUTS  = 5;	// ({x,y}, attck, def) * N warriors ? ==> 80?! //alternative idea: "heat map" + ({x,y}, attck, def) of current warrior
-    const int NUM_OUTPUTS = 2;	// 5? move forward/backard, left/rigt and attack.
+	const int NUM_INPUTS  = 204;	//10x10 map attack + 10x10 map defense + current{x,y,atk,def}	
+	const int NUM_OUTPUTS = 3;	// move forward/backard, left/rigt and attack.
 
     public int Trials;
     public float TrialDuration;
@@ -43,7 +43,7 @@ public class Optimizer : MonoBehaviour {
         xmlConfig.LoadXml(textAsset.text);
         experiment.SetOptimizer(this);
 
-        experiment.Initialize("Car Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
+        experiment.Initialize("War Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
 
         champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "car");
         popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "car");       

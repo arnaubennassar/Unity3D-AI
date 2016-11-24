@@ -4,7 +4,7 @@ using System.Collections;
 public class clanController : MonoBehaviour {
 
 	public string clanName = "A";
-	public const int totalWarriors = 10;
+	public int totalWarriors = 10;
 	public int aliveWarriors;
 	public int totalAtckPwr = 100;
 	public int totalDefPwr = 100;
@@ -17,6 +17,9 @@ public class clanController : MonoBehaviour {
 	public Vector2 boardSize;
 	public Transform enemy;
 
+	float lastMove = 0;
+	float lastAttack = 0;
+
 	Warrior[] warriors;
 
 	bool first = true;
@@ -27,7 +30,13 @@ public class clanController : MonoBehaviour {
 		public GameObject gO;
 		public int atck;
 		public int def;
+		public Vector2 pos;
+	}
 
+	public class maps
+	{
+		public int[,] attack;
+		public int[,] defense;
 	}
 
 	// Use this for initialization
@@ -58,6 +67,7 @@ public class clanController : MonoBehaviour {
 			warriors [i].gO = new GameObject ();
 			warriors [i].gO.AddComponent<SpriteRenderer> ().sprite = warriorImg;
 			warriors [i].gO.transform.position = origin + desp*i;
+			warriors [i].pos = new Vector2 ((int)origin.x, (int) origin.y);
 			warriors [i].gO.name = clanName + i.ToString ();
 			warriors [i].gO.transform.localScale = scale;
 		}
@@ -83,11 +93,11 @@ public class clanController : MonoBehaviour {
 		attack (0);
 	}
 
-	void Update(){
+/*	void Update(){
 		if (first)
 			test ();
 		first = false;
-	}
+	}	*/
 
 	bool checkLimits(Vector3 posi)
 	{
@@ -101,6 +111,7 @@ public class clanController : MonoBehaviour {
 	//return true if the movement is succesful
 	public bool move (int warriorId, Vector2 direction)
 	{
+		lastAttack = 0;
 		Vector3 aux = Vector3.zero;
 		if (warriors.Length > warriorId && warriors[warriorId].def > 0)
 		{
@@ -116,10 +127,14 @@ public class clanController : MonoBehaviour {
 			warriors [warriorId].gO.transform.position += aux;
 			if (!checkLimits (warriors [warriorId].gO.transform.position)) {
 				warriors [warriorId].gO.transform.position = vaux;
+				warriors [warriorId].pos = new Vector2 ((int)vaux.x, (int) vaux.y);
+				lastMove = -1;
 				return false;
 			}
+			lastMove = 1;
 			return true;
 		}
+		lastMove = -1;
 		return false;
 	}
 
@@ -166,14 +181,75 @@ public class clanController : MonoBehaviour {
 
 	//return damage recived by the enemy
 	public int attack (int warriorId){
+		int auxDmg;
 		if (warriorId < 0 || warriorId >= totalWarriors)
-			return 0;
+			auxDmg = 0;
 		if (warriors [warriorId].def <= 0)
-			return 0;
+			auxDmg = 0;
 		Vector2 aux = new Vector2 (warriors [warriorId].gO.transform.position.x, warriors [warriorId].gO.transform.position.y);
-		int auxDmg = enemy.GetComponent<clanController>().getDamage (aux, warriors [warriorId].atck);
+		auxDmg = enemy.GetComponent<clanController>().getDamage (aux, warriors [warriorId].atck);
 		Debug.Log (auxDmg + " damage infricted by clan "+ clanName);
+		if (auxDmg == 0)
+			lastAttack = -1;
+		else
+			lastAttack = 1;
+		lastMove = 0;
 		return auxDmg;
 	}
 
+	public int getWarriorState (int id){
+		if (id >= totalWarriors || id < 0)
+			return -1;
+		if (warriors [id].def < 0)
+			return 0;
+		return 1;
+	}
+
+	public Warrior getWarrior (int id) {
+		if (id >= totalWarriors || id < 0) {
+			Warrior aux = new Warrior ();
+			aux.def = -1;
+			aux.id = -1;
+			return aux;
+		}
+		return warriors [id];
+	}
+
+	public maps getMap (){
+		int[,] myMapAttack = getMyMap(true);
+		int[,] enemyMapAttack = enemy.GetComponent<clanController>(). getMyMap(true);
+		int[,] myMapDefense = getMyMap(false);
+		int[,] enemyMapDefense = enemy.GetComponent<clanController>(). getMyMap(false);
+		for (int i = 0; i < boardSize.x; ++i) {
+			for (int j = 0; j < boardSize.y; ++j) {
+				myMapAttack [i,j] -= enemyMapAttack [i,j];
+				myMapDefense [i,j] -= enemyMapDefense [i,j];
+			}
+		}
+		maps ret = new maps ();
+		ret.attack = myMapAttack;
+		ret.defense = myMapDefense;
+		return ret;
+	}
+	public int[,] getMyMap (bool attack){
+		int[,] map = new int[(int)boardSize.x, (int)boardSize.y];
+		for (int i = 0; i < boardSize.x; ++i) {
+			for (int j = 0; j < boardSize.y; ++j) {
+				map [i,j] = 0;
+			}
+		}
+		for (int i = 0; i < totalWarriors; ++i) {
+			if (warriors [i].def > 0) {
+				if (attack)
+					map [(int)warriors [i].pos.x, (int)warriors [i].pos.y] = warriors [i].atck;
+				else
+					map [(int)warriors [i].pos.x, (int)warriors [i].pos.y] = warriors [i].def;
+			}
+		}
+		return map;
+	}
+
+	public float fitness (int id){
+		return lastMove + lastAttack;
+	}
 }
