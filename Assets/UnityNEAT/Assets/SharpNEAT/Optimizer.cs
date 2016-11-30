@@ -11,7 +11,7 @@ using System.IO;
 public class Optimizer : MonoBehaviour {
 
 	const int NUM_INPUTS  = 204;	//10x10 map attack + 10x10 map defense + current{x,y,atk,def}	
-	const int NUM_OUTPUTS = 3;	// move forward/backard, left/rigt and attack.
+	const int NUM_OUTPUTS = 5;	// move forward/backard, left/rigt and attack.
 
     public int Trials;
     public float TrialDuration;
@@ -154,7 +154,7 @@ public class Optimizer : MonoBehaviour {
 
     public void Evaluate(IBlackBox box)
     {
-        GameObject obj = Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
+		GameObject obj = Unit.gameObject;//Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
         UnitController controller = obj.GetComponent<UnitController>();
 
         ControllerMap.Add(box, controller);
@@ -166,7 +166,7 @@ public class Optimizer : MonoBehaviour {
     {
         UnitController ct = ControllerMap[box];
 
-        Destroy(ct.gameObject);
+    //    Destroy(ct.gameObject);
     }
 
     public void RunBest()

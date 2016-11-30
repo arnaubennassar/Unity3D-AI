@@ -3,24 +3,26 @@ using System.Collections;
 
 public class clanController : MonoBehaviour {
 
-	public string clanName = "A";
+
 	public int totalWarriors = 10;
 	public int aliveWarriors;
 	public int totalAtckPwr = 100;
 	public int totalDefPwr = 100;
 	public bool uniformPowerDistribution = true;
-	public Vector3 desp;
-	public Sprite warriorImg;
-	public Vector3 scale;
+	public Vector3 desp = new Vector3(0.09f,0,0);
+	public Vector3 scale  = new Vector3(0.03f,0.03f,0);
+	public Vector2 boardSize = new Vector2(10,10);
+
+	public string clanName;
+	public Transform enemy;
 	public Vector3 origin;
 	public Vector3 deathPosition;
-	public Vector2 boardSize;
-	public Transform enemy;
+	public Sprite warriorImg;
 
 	float lastMove = 0;
 	float lastAttack = 0;
 
-	Warrior[] warriors;
+	public Warrior[] warriors;
 
 	bool first = true;
 
@@ -39,8 +41,13 @@ public class clanController : MonoBehaviour {
 		public int[,] defense;
 	}
 
-	// Use this for initialization
-	void Start () {
+/*	void Start(){
+		enemy = null;
+		FindObjectOfType<Controller> ().addNewClan (transform);
+	}
+*/
+	public void Start () {
+		origin = new Vector3 (Random.Range (0.4f, 9.4f), Random.Range (0.4f, 9.4f), 0);
 		aliveWarriors = totalWarriors;
 		warriors = new Warrior[totalWarriors];
 		int ttAtck = totalAtckPwr;
@@ -111,9 +118,11 @@ public class clanController : MonoBehaviour {
 	//return true if the movement is succesful
 	public bool move (int warriorId, Vector2 direction)
 	{
-		lastAttack = 0;
+	//	lastAttack = 0;
 		Vector3 aux = Vector3.zero;
-		if (warriors.Length > warriorId && warriors[warriorId].def > 0)
+		if (direction == Vector2.zero)
+			lastMove = -1;
+		else if (warriors.Length > warriorId && warriors[warriorId].def > 0)
 		{
 			if (direction.x > 0)
 				aux += new Vector3 (1, 0, 0);
@@ -193,7 +202,7 @@ public class clanController : MonoBehaviour {
 			lastAttack = -1;
 		else
 			lastAttack = 1;
-		lastMove = 0;
+		//lastMove = 0;
 		return auxDmg;
 	}
 
@@ -250,6 +259,15 @@ public class clanController : MonoBehaviour {
 	}
 
 	public float fitness (int id){
-		return lastMove + lastAttack;
+		float aux = 0;
+		if (lastMove == -1)
+			aux += 0.5f;
+		if (lastAttack == -1)
+			aux += 0.5f;
+		else if (lastAttack == 1)
+			aux = -1;
+		lastMove = 0;
+		lastAttack = 0;
+		return 1 - (Vector2.Distance (warriors [id].pos, enemy.GetComponent<clanController>().warriors[id].pos) / 14) - aux;
 	}
 }
