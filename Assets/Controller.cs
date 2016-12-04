@@ -13,8 +13,10 @@ public class Controller : MonoBehaviour {
 	public Sprite warriorImgA;
 	public Sprite warriorImgB;
 
-	int currentClanA = 0;
-	int currentClanB = 0;
+	int currentClan = 0;
+	bool isA = true;
+
+	int totalBoards = 0;
 
 
 	Vector3 pos = new Vector3(0,0,0);
@@ -38,85 +40,75 @@ public class Controller : MonoBehaviour {
 	void Start(){
 		grid = new gridCreator ();
 		games = new game[10000];
-		games [currentClanA] = new game ();
-	//	pos += desp;
-		games [currentClanA].ori = pos;
-		grid.createGrid (pos, 10, 10, colorA, colorB);
-		//grid.createGrid (pos, 10, 10, colorA, colorB);
+		pos -= desp;
 	}
 
-	void addPlayer(Transform clan, bool isA, bool isFirst){
-		Debug.Log (clan.name+ " ADD clan " + isA + " isFirst " + isFirst + " currentA " + currentClanA + " currentB " + currentClanB);
+	public void genUp(){
+		currentClan = 0;
+		isA = true;
+		pos = new Vector3(0,0,0) - desp;
+	}
+
+	void addPlayer(Transform clan){
+//		Debug.Log (clan.name+ " ADD clan " + isA + " isFirst " + isFirst + " currentA " + currentClan + " currentB " + currentClan);
 		if (isA) {
-			games [currentClanA].clanA = clan.GetComponent<clanController> ();
-			games [currentClanA].clanNA = clan.GetComponent<clanNEAT> ();
-			games [currentClanA].traA = clan;
+			games [currentClan].clanA = clan.GetComponent<clanController> ();
+			games [currentClan].clanNA = clan.GetComponent<clanNEAT> ();
+			games [currentClan].traA = clan;
 
+			clan.name = "clan A_" + currentClan.ToString ();
+			games [currentClan].clanA.clanName = "clan A_" + currentClan.ToString ();
+			games [currentClan].clanA.origin = games [currentClan].ori; 
+			games [currentClan].clanA.dOrigin = new Vector3 (0.1f, 0, 0);
+			games [currentClan].clanA.deathPosition = new Vector3 (-1, 0, 0) + games[currentClan].ori;
+			games [currentClan].clanA.warriorImg = warriorImgA;
+			games [currentClan].clanNA.itsMyTurn = true;
 
-			games [currentClanA].clanA.clanName = "clan A_" + currentClanA.ToString ();
-			games [currentClanA].clanA.origin = new Vector3 (-0.4f, 0, 0) + games [currentClanA].ori;
-			games [currentClanA].clanA.deathPosition = new Vector3 (-1, 0, 0) + games[currentClanA].ori;
-			games [currentClanA].clanA.warriorImg = warriorImgA;
-
-			games [currentClanA].clanNA.itsMyTurn = true;
-			if (!isFirst) {
-				games [currentClanA].clanA.enemy = games [currentClanA].traB;
-//				games [currentClanA].clanNA.enemyNeat = games [currentClanA].traB;
-				games [currentClanA].clanB.enemy = games [currentClanA].traA;
-//				games [currentClanA].clanNB.enemyNeat = games [currentClanA].traA;
-
-//				games [currentClanA].clanA.customStart ();
-//				games [currentClanA].clanB.customStart ();
-			}
 		} else {
-			games [currentClanB].clanB = clan.GetComponent<clanController> ();
-			games [currentClanB].clanNB = clan.GetComponent<clanNEAT> ();
-			games [currentClanB].traB = clan;
+			games [currentClan].clanB = clan.GetComponent<clanController> ();
+			games [currentClan].clanNB = clan.GetComponent<clanNEAT> ();
+			games [currentClan].traB = clan;
 
-			games [currentClanB].clanB.clanName = "clan B_" + currentClanB.ToString ();
-			games [currentClanB].clanB.origin = new Vector3 (8.6f, 9, 0) + games [currentClanB].ori;
-			games [currentClanB].clanB.deathPosition = new Vector3 (10, 9, 0) + games[currentClanB].ori;
-			games [currentClanB].clanB.warriorImg = warriorImgB;
+			games [currentClan].clanB.clanName = "clan B_" + currentClan.ToString ();
+			games [currentClan].clanB.origin = games [currentClan].ori;
+			games [currentClan].clanB.dOrigin = new Vector3 (9.1f, 9, 0);
+			games [currentClan].clanB.deathPosition = new Vector3 (11, 9, 0) + games[currentClan].ori;
+			games [currentClan].clanB.warriorImg = warriorImgB;
 
-			games [currentClanB].clanNB.itsMyTurn = false;
-			if (!isFirst) {
-				games [currentClanB].clanA.enemy = games [currentClanA].traB;
-		//		games [currentClanB].clanNA.enemyNeat = games [currentClanA].traB;
-				games [currentClanB].clanB.enemy = games [currentClanA].traA;
-		//		games [currentClanB].clanNB.enemyNeat = games [currentClanA].traA;
 
-	//			games [currentClanB].clanA.customStart ();
-	//			games [currentClanB].clanB.customStart ();
-			}
+			games [currentClan].clanNB.itsMyTurn = false;
+			games [currentClan].clanA.enemy = clan;
+			games [currentClan].clanNA.enemy = clan;
+			games [currentClan].clanB.enemy = games [currentClan].traA;
+			games [currentClan].clanNB.enemy = games [currentClan].traA;
+
+			games [currentClan].clanA.customStart ();
+			games [currentClan].clanB.customStart ();
+
 		}
 	}
 
 	public void addNewClan(Transform clan){
-		if (clan.name == "clan A(Clone)") {
-			clan.name = "clan A_" + currentClanA.ToString ();
-			if (currentClanA <= currentClanB && !(currentClanA == 0 && currentClanB == 0) )
-				addPlayer (clan, true, false);
-			else {
-				games [currentClanA] = new game ();
+		if (isA) {
+			if (totalBoards <= currentClan) {
+				games [currentClan] = new game ();
 				pos += desp;
-				games [currentClanA].ori = pos;
-				grid.createGrid (pos, 10, 10, colorA, colorB);
-				addPlayer (clan, true, true);
+				games [currentClan].ori = pos;
+				grid.createGrid (pos + new Vector3(0.5f,0,0), 10, 10, colorA, colorB);
 			}
-			++currentClanA;
+			addPlayer (clan);
+			isA = !isA;
 
 		} else {
-			clan.name = "clan B_" + currentClanB.ToString ();
-			if (currentClanB <= currentClanA && !(currentClanA == 0 && currentClanB == 0))
-				addPlayer (clan, false, false);
-			else {
-				games [currentClanB] = new game ();
-				pos += desp;
-				games [currentClanA].ori = pos;
-				grid.createGrid (pos, 10, 10, colorA, colorB);
-				addPlayer (clan, false, true);
+			clan.name = "clan B_" + currentClan.ToString ();
+			clan.GetComponent<clanController>().clanName = "clan B_" + currentClan.ToString ();
+			addPlayer (clan);
+			++currentClan;
+			if (currentClan > totalBoards) {
+				++totalBoards;
+				Debug.Log (totalBoards + " boards created");
 			}
-			++currentClanB;
+			isA = !isA;
 		}
 	}
 }

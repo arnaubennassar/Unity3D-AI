@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+
 
 public class clanController : MonoBehaviour {
 
@@ -16,6 +18,7 @@ public class clanController : MonoBehaviour {
 	public string clanName;
 	public Transform enemy;
 	public Vector3 origin;
+	public Vector3 dOrigin;
 	public Vector3 deathPosition;
 	public Sprite warriorImg;
 
@@ -41,13 +44,13 @@ public class clanController : MonoBehaviour {
 		public int[,] defense;
 	}
 
-/*	void Start(){
-		enemy = null;
+	void Start(){
 		FindObjectOfType<Controller> ().addNewClan (transform);
 	}
-*/
-	public void Start () {
-		origin = new Vector3 (Random.Range (0.4f, 9.4f), Random.Range (0.4f, 9.4f), 0);
+
+	public void customStart () {
+		
+	//	origin = new Vector3 (Random.Range (0.4f, 9.4f), Random.Range (0.4f, 9.4f), 0);
 		aliveWarriors = totalWarriors;
 		warriors = new Warrior[totalWarriors];
 		int ttAtck = totalAtckPwr;
@@ -63,18 +66,19 @@ public class clanController : MonoBehaviour {
 					warriors [i].atck = ttAtck;
 					warriors [i].def = ttDef;
 				} else {
-					int aux = Random.Range (1, ttAtck);
+					int aux = UnityEngine.Random.Range (1, ttAtck);
 					warriors [i].atck = aux;
 					ttAtck -= aux;
-					aux = Random.Range (1, ttDef);
+					aux = UnityEngine.Random.Range (1, ttDef);
 					warriors [i].def = aux;
 					ttDef -= aux;
 				}
 			}
 			warriors [i].gO = new GameObject ();
+			warriors [i].gO.transform.parent = transform;
 			warriors [i].gO.AddComponent<SpriteRenderer> ().sprite = warriorImg;
-			warriors [i].gO.transform.position = origin + desp*i;
-			warriors [i].pos = new Vector2 ((int)origin.x, (int) origin.y);
+			warriors [i].gO.transform.position = origin + dOrigin + desp*i;
+			warriors [i].pos = new Vector2 ((int)origin.x + (int)dOrigin.x, (int)origin.y + (int) dOrigin.y);
 			warriors [i].gO.name = clanName + i.ToString ();
 			warriors [i].gO.transform.localScale = scale;
 		}
@@ -106,11 +110,11 @@ public class clanController : MonoBehaviour {
 		first = false;
 	}	*/
 
-	bool checkLimits(Vector3 posi)
+	bool checkLimits(Vector2 posi)
 	{
-		if (posi.x < 0 || posi.y < 0)
+		if ((int)posi.x < (int)origin.x || (int)posi.y < (int)origin.y)
 			return false;
-		if (posi.x >= boardSize.x || posi.y >= boardSize.y)
+		if ((int)posi.x >= (int)boardSize.x + (int)origin.x || (int)posi.y >= (int)boardSize.y + (int)origin.y )
 			return false;
 		return true;
 	}
@@ -132,16 +136,13 @@ public class clanController : MonoBehaviour {
 				aux += new Vector3 (0, 1, 0);
 			else if (direction.y < 0)
 				aux += new Vector3 (0, -1, 0);
-			Vector3 vaux = warriors [warriorId].gO.transform.position;
-			warriors [warriorId].gO.transform.position += aux;
-			if (!checkLimits (warriors [warriorId].gO.transform.position)) {
-				warriors [warriorId].gO.transform.position = vaux;
-				warriors [warriorId].pos = new Vector2 ((int)vaux.x, (int) vaux.y);
-				lastMove = -1;
-				return false;
+			Vector2 v2aux = new Vector2 (aux.x + warriors [warriorId].pos.x, aux.y + warriors [warriorId].pos.y);
+			if (checkLimits (v2aux)) {
+				warriors [warriorId].gO.transform.position += aux;
+				warriors [warriorId].pos = v2aux;
+				lastMove = 1;
+				return true;
 			}
-			lastMove = 1;
-			return true;
 		}
 		lastMove = -1;
 		return false;
@@ -248,11 +249,19 @@ public class clanController : MonoBehaviour {
 			}
 		}
 		for (int i = 0; i < totalWarriors; ++i) {
+			
 			if (warriors [i].def > 0) {
-				if (attack)
-					map [(int)warriors [i].pos.x, (int)warriors [i].pos.y] = warriors [i].atck;
+		//		
+				if (attack){
+					try{
+						map [(int)warriors [i].pos.x - (int)origin.x, (int)warriors [i].pos.y -(int) origin.y] = warriors [i].atck;
+					}
+					catch(Exception e){
+						Debug.Log ("warrior pos "+warriors [i].pos + " origin "+origin);
+					}
+				}
 				else
-					map [(int)warriors [i].pos.x, (int)warriors [i].pos.y] = warriors [i].def;
+					map [(int)warriors [i].pos.x - (int)origin.x, (int)warriors [i].pos.y - (int)origin.y] = warriors [i].def;
 			}
 		}
 		return map;

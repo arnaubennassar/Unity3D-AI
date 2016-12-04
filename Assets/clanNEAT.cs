@@ -6,28 +6,23 @@ public class clanNEAT : UnitController {
 	public bool IsRunning;
 	IBlackBox box;
 	public bool itsMyTurn = true;
-	public Transform clanA;
-	public Transform clanB;
+	public Transform enemy;
 	public int currentWarrior = 0;
 
 	void FixedUpdate() {
 		//Change the number of inputs/outputs at "Optimizer.cs"
 
 			//int active = transform.GetComponent<clanController> ().aliveWarriors;
-		if (IsRunning ){//&& itsMyTurn) {
+		if (IsRunning && itsMyTurn) {
 			//Calculate INPUT (i.e. "frontsensor", "leftsensor", ....)
 			ISignalArray inputArr = box.InputSignalArray;
 
 			clanController.maps maps = new clanController.maps ();
 
 			clanController.Warrior current = new clanController.Warrior ();
-			if (itsMyTurn) {
-				current = clanA.GetComponent<clanController> ().getWarrior (currentWarrior);
-				maps = clanA.GetComponent<clanController> ().getMap ();
-			} else {
-				current = clanB.GetComponent<clanController> ().getWarrior (currentWarrior);
-				maps = clanB.GetComponent<clanController> ().getMap ();
-			}
+			current = transform.GetComponent<clanController> ().getWarrior (currentWarrior);
+			maps = transform.GetComponent<clanController> ().getMap ();
+			
 			if (current.def > 0) {
 				inputArr [0] = current.atck;
 				inputArr [1] = current.def;
@@ -55,7 +50,6 @@ public class clanNEAT : UnitController {
 				var left = (float)outputArr [2];
 				var right = (float)outputArr [3];
 				var attack = (float)outputArr [4];
-				Debug.Log (up + " " + down + " " + left + " " + right + " " + attack);
 
 				Vector2 aux = new Vector2 ();
 				if (up >= down)
@@ -66,10 +60,7 @@ public class clanNEAT : UnitController {
 					aux.x = 1;
 				else if (left > right)
 					aux.x = -1;
-				Debug.Log (aux+"\n\n");
-				if (itsMyTurn)
-					clanA.GetComponent<clanController> ().move (currentWarrior, aux);
-				else clanB.GetComponent<clanController> ().move (currentWarrior, aux);
+				transform.GetComponent<clanController> ().move (currentWarrior, aux);
 			//	if (attack > 0.5f)
 			//		transform.GetComponent<clanController> ().attack (currentWarrior);
 				//++currentWarrior;
@@ -89,7 +80,7 @@ public class clanNEAT : UnitController {
 			if (currentWarrior == 0) {
 				currentWarrior = 0;
 				itsMyTurn = !itsMyTurn;
-				//enemyNeat.GetComponent<clanNEAT> ().giveMeTurn ();
+				enemy.GetComponent<clanNEAT> ().giveMeTurn ();
 			} 
 		} 
 	}
@@ -114,14 +105,8 @@ public class clanNEAT : UnitController {
 	public override float GetFitness()
 	{
 		// Implement a meaningful fitness function here, for each unit.
-		float fit;
-		if (itsMyTurn)
-			fit = clanA.GetComponent<clanController>().fitness(currentWarrior);
-		else fit = clanB.GetComponent<clanController>().fitness(currentWarrior);
-		if (fit >= 1) {
-			clanA.GetComponent<clanController> ().Start ();
-			clanB.GetComponent<clanController> ().Start ();
-		}
+		float fit = transform.GetComponent<clanController>().fitness(currentWarrior);
+
 		if (fit > 0) return fit;
 		return 0;
 	}

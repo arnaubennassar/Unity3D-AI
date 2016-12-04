@@ -33,7 +33,9 @@ public class Optimizer : MonoBehaviour {
 
     private uint Generation;
     private double Fitness;
+	public Controller con;
 
+	uint prevGen = 0;
 	// Use this for initialization
 	void Start () {
         Utility.DebugLog = true;
@@ -154,7 +156,12 @@ public class Optimizer : MonoBehaviour {
 
     public void Evaluate(IBlackBox box)
     {
-		GameObject obj = Unit.gameObject;//Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
+		if (prevGen < Generation) {
+			prevGen = Generation;
+			con.genUp ();
+		}
+			
+		GameObject obj = Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
         UnitController controller = obj.GetComponent<UnitController>();
 
         ControllerMap.Add(box, controller);
@@ -166,7 +173,7 @@ public class Optimizer : MonoBehaviour {
     {
         UnitController ct = ControllerMap[box];
 
-    //    Destroy(ct.gameObject);
+        Destroy(ct.gameObject);
     }
 
     public void RunBest()
