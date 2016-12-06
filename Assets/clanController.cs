@@ -270,13 +270,23 @@ public class clanController : MonoBehaviour {
 	public float fitness (int id){
 		float aux = 0;
 		if (lastMove == -1)
-			aux += 0.5f;
+			aux += 0.25f;
 		if (lastAttack == -1)
-			aux += 0.5f;
+			aux += 0.25f;
 		else if (lastAttack == 1)
 			aux = -1;
 		lastMove = 0;
 		lastAttack = 0;
-		return 1 - (Vector2.Distance (warriors [id].pos, enemy.GetComponent<clanController>().warriors[id].pos) / 14) - aux;
+		int difPwr = totalAtckPwr + totalDefPwr - (enemy.GetComponent<clanController> ().totalAtckPwr + enemy.GetComponent<clanController> ().totalDefPwr);
+		if (difPwr > 0)
+			return 1;
+		else if (difPwr == 0) {
+			float ret = 1 - (Vector2.Distance (warriors [id].pos, enemy.GetComponent<clanController> ().warriors [id].pos) / 14) - aux;
+			ret = Math.Max (0.2f, ret);
+			return Math.Min (0.8f, ret);
+		}
+		else
+			return 0;
+		//return
 	}
 }

@@ -61,8 +61,8 @@ public class clanNEAT : UnitController {
 				else if (left > right)
 					aux.x = -1;
 				transform.GetComponent<clanController> ().move (currentWarrior, aux);
-			//	if (attack > 0.5f)
-			//		transform.GetComponent<clanController> ().attack (currentWarrior);
+				if (attack > 0.5f)
+					transform.GetComponent<clanController> ().attack (currentWarrior);
 				//++currentWarrior;
 				/*	var steer = (float)outputArr[0] * 2 - 1;
         var gas = (float)outputArr[1] * 2 - 1;
