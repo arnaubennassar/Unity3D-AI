@@ -10,6 +10,9 @@ public class Controller : MonoBehaviour {
 	public Color colorA = Color.black;
 	public Color colorB = Color.white;
 
+	public Sprite baseA;
+	public Sprite baseB;
+
 	public Sprite warriorImgA;
 	public Sprite warriorImgB;
 
@@ -94,7 +97,7 @@ public class Controller : MonoBehaviour {
 				games [currentClan] = new game ();
 				pos += desp;
 				games [currentClan].ori = pos;
-				grid.createGrid (pos + new Vector3(0.5f,0,0), 10, 10, colorA, colorB);
+				grid.createGrid (pos + new Vector3(0.5f,0,0), 10, 10, colorA, colorB, totalBoards, baseA, baseB);
 			}
 			addPlayer (clan);
 			isA = !isA;

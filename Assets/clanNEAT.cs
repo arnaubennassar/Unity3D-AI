@@ -24,6 +24,10 @@ public class clanNEAT : UnitController {
 			maps = transform.GetComponent<clanController> ().getMap ();
 			
 			if (current.def > 0) {
+				float[] auxIN = transform.GetComponent<clanController> ().getInput (currentWarrior);
+				for (int i = 0; i < 28; ++i)
+					inputArr [i] = auxIN [i];
+				/*
 				inputArr [0] = current.atck;
 				inputArr [1] = current.def;
 				inputArr [2] = current.pos.x;
@@ -41,28 +45,31 @@ public class clanNEAT : UnitController {
 						inputArr [i * sY + j + desp] = maps.defense [i, j];
 					}
 				}
+				*/
 				box.Activate ();
 				ISignalArray outputArr = box.OutputSignalArray;
 
 				//Do stuff with the output (i.e. move an object using "steer" and "gas")
-				var up = (float)outputArr [0];
-				var down = (float)outputArr [1];
-				var left = (float)outputArr [2];
-				var right = (float)outputArr [3];
-				var attack = (float)outputArr [4];
+				double maxval = 0;
+				int pos = 0;
+				for (int i = 0; i < 9; ++i) {
+					if (maxval < outputArr [i]) {
+						maxval = outputArr [i];
+						pos = i;
+					}
+				}
 
-				Vector2 aux = new Vector2 ();
-				if (up >= down)
-					aux.y = 1;
-				else if (down >= up)
-					aux.y = -1;
-				if (right > left)
-					aux.x = 1;
-				else if (left > right)
-					aux.x = -1;
-				transform.GetComponent<clanController> ().move (currentWarrior, aux);
-				if (attack > 0.5f)
-					transform.GetComponent<clanController> ().attack (currentWarrior);
+				if (pos == 0) transform.GetComponent<clanController> ().attack (currentWarrior);
+				else if (pos == 1) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (-1,-1));
+				else if (pos == 2) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (0, -1));
+				else if (pos == 3) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (1, -1));
+				else if (pos == 4) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (-1, 0));
+				else if (pos == 5) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (1,  0));
+				else if (pos == 6) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (-1, 1));
+				else if (pos == 7) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (0,  1));
+				else if (pos == 8) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (1,  1));
+				
+
 				//++currentWarrior;
 				/*	var steer = (float)outputArr[0] * 2 - 1;
         var gas = (float)outputArr[1] * 2 - 1;
