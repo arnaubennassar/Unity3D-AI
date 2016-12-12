@@ -8,13 +8,12 @@ public class clanNEAT : UnitController {
 	public IBlackBox box;
 	public bool itsMyTurn = true;
 	public bool isUser = false;
-	bool userBlock = false;
+	public bool userBlock = false;
 	public Transform enemy;
 	public int currentWarrior = 0;
 
 	void FixedUpdate() {
 		//Change the number of inputs/outputs at "Optimizer.cs"
-		Debug.Log ("MEH");
 			//int active = transform.GetComponent<clanController> ().aliveWarriors;
 		if (IsRunning && itsMyTurn && !userBlock) {
 			//Calculate INPUT (i.e. "frontsensor", "leftsensor", ....)
@@ -57,7 +56,6 @@ public class clanNEAT : UnitController {
 				int pos = 1;
 				for (int i = 1; i < 9; ++i) {
 					if (maxval < outputArr [i]) {
-						Debug.Log ("FUCK YEAH");
 						maxval = outputArr [i];
 						pos = i;
 					}
