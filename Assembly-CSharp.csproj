@@ -201,6 +201,7 @@
      <Compile Include="Assets\UnityNEAT\Assets\SharpNEAT\Utility\ZigguratGaussianSampler.cs" />
      <Compile Include="Assets\clanController.cs" />
      <Compile Include="Assets\clanNEAT.cs" />
+     <Compile Include="Assets\game.cs" />
      <Compile Include="Assets\gridCreator.cs" />
      <None Include="Assets\UnityNEAT\ProjectSettings\ProjectVersion.txt" />
      <None Include="Assets\UnityNEAT\Assets\Resources\experiment.config.xml" />

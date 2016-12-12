@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Controller : MonoBehaviour {
 
+	public bool isGame = false;
+
 	public int rows = 10;
 	public int cols = 10;
 
@@ -92,26 +94,28 @@ public class Controller : MonoBehaviour {
 	}
 
 	public void addNewClan(Transform clan){
-		if (isA) {
-			if (totalBoards <= currentClan) {
-				games [currentClan] = new game ();
-				pos += desp;
-				games [currentClan].ori = pos;
-				grid.createGrid (pos + new Vector3(0.5f,0,0), 10, 10, colorA, colorB, totalBoards, baseA, baseB);
-			}
-			addPlayer (clan);
-			isA = !isA;
+		if (isGame) {
+			if (isA) {
+				if (totalBoards <= currentClan) {
+					games [currentClan] = new game ();
+					pos += desp;
+					games [currentClan].ori = pos;
+					grid.createGrid (pos + new Vector3 (0.5f, 0, 0), 10, 10, colorA, colorB, totalBoards, baseA, baseB);
+				}
+				addPlayer (clan);
+				isA = !isA;
 
-		} else {
-			clan.name = "clan B_" + currentClan.ToString ();
-			clan.GetComponent<clanController>().clanName = "clan B_" + currentClan.ToString ();
-			addPlayer (clan);
-			++currentClan;
-			if (currentClan > totalBoards) {
-				++totalBoards;
-				Debug.Log (totalBoards + " boards created");
+			} else {
+				clan.name = "clan B_" + currentClan.ToString ();
+				clan.GetComponent<clanController> ().clanName = "clan B_" + currentClan.ToString ();
+				addPlayer (clan);
+				++currentClan;
+				if (currentClan > totalBoards) {
+					++totalBoards;
+					Debug.Log (totalBoards + " boards created");
+				}
+				isA = !isA;
 			}
-			isA = !isA;
 		}
 	}
 }

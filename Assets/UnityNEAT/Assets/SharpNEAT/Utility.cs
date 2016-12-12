@@ -111,17 +111,17 @@ public class Utility : MonoBehaviour {
         return UnityEngine.Random.Range(-threshold, threshold);
     }
 
-    //public static IBlackBox LoadBrain(string filePath)
-    //{
-    //    OptimizationExperiment experiment = new OptimizationExperiment();
-    //    XmlDocument xmlConfig = new XmlDocument();
-    //    TextAsset textAsset = (TextAsset)Resources.Load("phototaxis.config");
-    //    //      xmlConfig.Load(OptimizerParameters.ConfigFile);
-    //    xmlConfig.LoadXml(textAsset.text);
-    // //   experiment.SetOptimizer(this);
-    //    experiment.Initialize(OptimizerParameters.Name, xmlConfig.DocumentElement, OptimizerParameters.NumInputs, OptimizerParameters.NumOutputs);
-    //    return LoadBrain(filePath, experiment);
-    //}
+  /*  public static IBlackBox LoadBrain(string filePath)
+    {
+        OptimizationExperiment experiment = new OptimizationExperiment();
+        XmlDocument xmlConfig = new XmlDocument();
+        TextAsset textAsset = (TextAsset)Resources.Load("phototaxis.config");
+              xmlConfig.Load(OptimizerParameters.ConfigFile);
+        xmlConfig.LoadXml(textAsset.text);
+        experiment.SetOptimizer(this);
+        experiment.Initialize(OptimizerParameters.Name, xmlConfig.DocumentElement, OptimizerParameters.NumInputs, OptimizerParameters.NumOutputs);
+        return LoadBrain(filePath, experiment);
+    }	*/
 
     public static IBlackBox LoadBrain(string filePath, INeatExperiment experiment)
     {

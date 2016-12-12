@@ -10,7 +10,7 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
-	const int NUM_INPUTS  = 28;	//10x10 map attack + 10x10 map defense + current{x,y,atk,def}	
+	const int NUM_INPUTS  = 25;	//10x10 map attack + 10x10 map defense + current{x,y,atk,def}	
 	const int NUM_OUTPUTS = 9;	// move forward/backard, left/rigt and attack.
 
     public int Trials;
@@ -129,7 +129,7 @@ public class Optimizer : MonoBehaviour {
             experiment.SavePopulation(xw, _ea.GenomeList);
         }
         // Also save the best genome
-
+		Debug.Log(popFileSavePath);
         using (XmlWriter xw = XmlWriter.Create(champFileSavePath, _xwSettings))
         {
             experiment.SavePopulation(xw, new NeatGenome[] { _ea.CurrentChampGenome });
@@ -211,6 +211,42 @@ public class Optimizer : MonoBehaviour {
 
         controller.Activate(phenome);
     }
+
+	public GameObject customRB(){
+		Time.timeScale = 1;
+
+		NeatGenome genome = null;
+
+
+		// Try to load the genome from the XML document.
+		try
+		{
+			using (XmlReader xr = XmlReader.Create(champFileSavePath))
+				genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, (NeatGenomeFactory)experiment.CreateGenomeFactory())[0];
+
+
+		}
+		catch (Exception e1)
+		{
+			// print(champFileLoadPath + " Error loading genome from file!\nLoading aborted.\n"
+			//						  + e1.Message + "\nJoe: " + champFileLoadPath);
+			return null;
+		}
+
+		// Get a genome decoder that can convert genomes to phenomes.
+		var genomeDecoder = experiment.CreateGenomeDecoder();
+
+		// Decode the genome into a phenome (neural network).
+		var phenome = genomeDecoder.Decode(genome);
+
+		GameObject obj = Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
+		UnitController controller = obj.GetComponent<UnitController>();
+
+		ControllerMap.Add(phenome, controller);
+
+		controller.Activate(phenome);
+		return obj;
+	}
 
     public float GetFitness(IBlackBox box)
     {

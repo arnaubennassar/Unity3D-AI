@@ -159,9 +159,17 @@ namespace SharpNeat.Core
         /// </summary>
         public void SetFitness(double fitness)
         {
-            if(fitness < 0.0 || double.IsNaN(fitness) || double.IsInfinity(fitness)) {
+			if(fitness < 0.0){ 
                 throw new ArgumentOutOfRangeException("Negative fitness values are not valid.");
             }
+
+			if( double.IsNaN(fitness) ){
+				throw new ArgumentOutOfRangeException("Negative fitness values are not valid. 00000");
+			}
+
+			if( double.IsInfinity(fitness)) {
+					throw new ArgumentOutOfRangeException("Negative fitness values are not valid. 11111");
+			}
 
             _isEvaluated = true;
             _evaluationCount++;
