@@ -1,16 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/game.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Controller.cs">
     <Files>
+      <File FileName="Assets/Controller.cs" Line="1" Column="1" />
       <File FileName="Assets/clanController.cs" Line="141" Column="1" />
       <File FileName="Assets/UnityNEAT/Assets/SharpNEAT/Optimizer.cs" Line="1" Column="1" />
-      <File FileName="Assets/clanNEAT.cs" Line="11" Column="9" />
-      <File FileName="Assets/Controller.cs" Line="1" Column="1" />
+      <File FileName="Assets/clanNEAT.cs" Line="1" Column="1" />
       <File FileName="Assets/UnityNEAT/Assets/Resources/experiment.config.xml" Line="1" Column="1" />
       <File FileName="Assets/gridCreator.cs" Line="1" Column="1" />
       <File FileName="Assets/UnityNEAT/Assets/SharpNEAT/Core/EvaluationInfo.cs" Line="1" Column="1" />
       <File FileName="Assets/UnityNEAT/Assets/SharpNEAT/Utility.cs" Line="1" Column="1" />
-      <File FileName="Assets/game.cs" Line="38" Column="38" />
+      <File FileName="Assets/game.cs" Line="1" Column="1" />
       <File FileName="Assets/UnityNEAT/Assets/CarExperiment/CarController.cs" Line="1" Column="1" />
       <File FileName="Assets/UnityNEAT/Assets/SharpNEAT/Network/Domains/INeatExperiment.cs" Line="1" Column="1" />
       <File FileName="Assets/UnityNEAT/Assets/CarExperiment/SimpleExperiment.cs" Line="1" Column="1" />

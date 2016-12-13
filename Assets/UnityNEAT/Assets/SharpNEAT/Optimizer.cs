@@ -34,10 +34,15 @@ public class Optimizer : MonoBehaviour {
     private uint Generation;
     private double Fitness;
 	public Controller con;
-
+	bool hasBrain = false;
+	public game ga;
+	public Controller contr;
 	uint prevGen = 0;
 	// Use this for initialization
 	void Start () {
+		int hBrain = PlayerPrefs.GetInt ("hasBrain", 0);
+		if (hBrain == 1)
+			hasBrain = true;
         Utility.DebugLog = true;
         experiment = new SimpleExperiment();
         XmlDocument xmlConfig = new XmlDocument();
@@ -79,6 +84,9 @@ public class Optimizer : MonoBehaviour {
 
     public void StartEA()
     {        
+		Camera.main.transform.position = new Vector3 (5,5,-10);
+		contr.isGame = true;
+		ga.isGame = false;
         Utility.DebugLog = true;
         Utility.Log("Starting PhotoTaxis experiment");
         // print("Loading: " + popFileLoadPath);
@@ -142,7 +150,8 @@ public class Optimizer : MonoBehaviour {
 
       
         EARunning = false;        
-        
+		hasBrain = true;
+		PlayerPrefs.SetInt ("hasBrain", 1);
     }
 
     public void StopEA()
@@ -212,6 +221,12 @@ public class Optimizer : MonoBehaviour {
         controller.Activate(phenome);
     }
 
+	void game () {
+		ga.destroyThem ();
+		ga.isGame = true;
+		ga.Start ();
+	}
+
 	public GameObject customRB(){
 		Time.timeScale = 1;
 
@@ -259,7 +274,7 @@ public class Optimizer : MonoBehaviour {
 
     void OnGUI()
     {
-        if (GUI.Button(new Rect(10, 10, 100, 40), "Start EA"))
+        if (GUI.Button(new Rect(10, 10, 100, 40), "Evolve AI"))
         {
             StartEA();
         }
@@ -267,11 +282,11 @@ public class Optimizer : MonoBehaviour {
         {
             StopEA();
         }
-        if (GUI.Button(new Rect(10, 110, 100, 40), "Run best"))
-        {
-            RunBest();
-        }
-
-        GUI.Button(new Rect(10, Screen.height - 70, 100, 60), string.Format("Generation: {0}\nFitness: {1:0.00}", Generation, Fitness));
+		if (hasBrain && !EARunning) {
+			if (GUI.Button (new Rect (10, 110, 100, 40), "Play")) {
+				game ();
+			}
+		}
+		GUI.Button(new Rect(10, Screen.height - 70, 100, 60), string.Format("Generation: {0}\nFitness: {1:0.00}", Generation, Fitness));
     }
 }

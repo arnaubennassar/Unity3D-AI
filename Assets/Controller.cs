@@ -94,6 +94,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	public void addNewClan(Transform clan){
+		Debug.Log ("adding");
 		if (isGame) {
 			if (isA) {
 				if (totalBoards <= currentClan) {
