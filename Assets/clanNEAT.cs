@@ -53,8 +53,8 @@ public class clanNEAT : UnitController {
 
 				//Do stuff with the output (i.e. move an object using "steer" and "gas")
 				double maxval = 0;
-				int pos = 1;
-				for (int i = 1; i < 9; ++i) {
+				int pos = 0;
+				for (int i = 0; i < 9; ++i) {
 					if (maxval < outputArr [i]) {
 						maxval = outputArr [i];
 						pos = i;
@@ -90,6 +90,11 @@ public class clanNEAT : UnitController {
 			if (currentWarrior == 0 && isUser) {
 				userBlock = true;
 				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "It's your turn";
+				if (transform.GetComponent<clanController> ().getWarrior (0).def <= 0) {
+					GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You are dead";
+					userBlock = false;
+					++currentWarrior;
+				}
 			} 
 			itsMyTurn = false;
 			enemy.GetComponent<clanNEAT> ().giveMeTurn ();
@@ -97,13 +102,18 @@ public class clanNEAT : UnitController {
 	}
 
 	public void Up (){
+		
 		if (userBlock && itsMyTurn) {
 			transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (0, 1));
 			++currentWarrior;
 			userBlock = false;
 			itsMyTurn = false;
 			enemy.GetComponent<clanNEAT> ().giveMeTurn ();
-			GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
+			if ( transform.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You lose";
+			else if ( enemy.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You win";
+			else GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
 		}
 	}
 	public void Down (){
@@ -113,7 +123,11 @@ public class clanNEAT : UnitController {
 			userBlock = false;
 			itsMyTurn = false;
 			enemy.GetComponent<clanNEAT> ().giveMeTurn ();
-			GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
+			if ( transform.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You lose";
+			else if ( enemy.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You win";
+			else GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
 		}
 	}
 	public void Left (){
@@ -123,7 +137,11 @@ public class clanNEAT : UnitController {
 			userBlock = false;
 			itsMyTurn = false;
 			enemy.GetComponent<clanNEAT> ().giveMeTurn ();
-			GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
+			if ( transform.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You lose";
+			else if ( enemy.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You win";
+			else GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
 		}
 	}
 	public void Right (){
@@ -133,7 +151,11 @@ public class clanNEAT : UnitController {
 			userBlock = false;
 			itsMyTurn = false;
 			enemy.GetComponent<clanNEAT> ().giveMeTurn ();
-			GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
+			if ( transform.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You lose";
+			else if ( enemy.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You win";
+			else GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
 		}
 	}
 	public void Attack(){
@@ -143,7 +165,11 @@ public class clanNEAT : UnitController {
 			userBlock = false;
 			itsMyTurn = false;
 			enemy.GetComponent<clanNEAT> ().giveMeTurn ();
-			GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
+			if ( transform.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You lose";
+			else if ( enemy.GetComponent<clanController>().getBP() <= 0)
+				GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "You win";
+			else GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = transform.GetComponent<clanController>().getBP().ToString() + " - " + enemy.GetComponent<clanController>().getBP().ToString();
 		}
 	}
 
