@@ -15,6 +15,7 @@ public class clanNEAT : UnitController {
 	void FixedUpdate() {
 		//Change the number of inputs/outputs at "Optimizer.cs"
 			//int active = transform.GetComponent<clanController> ().aliveWarriors;
+	//	if (!isUser) GameObject.FindGameObjectWithTag("Respawn").GetComponent<Text>().text = "";
 		if (IsRunning && itsMyTurn && !userBlock) {
 			//Calculate INPUT (i.e. "frontsensor", "leftsensor", ....)
 			ISignalArray inputArr = box.InputSignalArray;
@@ -27,27 +28,8 @@ public class clanNEAT : UnitController {
 			
 			if (current.def > 0) {
 				float[] auxIN = transform.GetComponent<clanController> ().getInput (currentWarrior);
-				for (int i = 0; i < 25; ++i)
+				for (int i = 0; i < 17; ++i)
 					inputArr [i] = auxIN [i];
-				/*
-				inputArr [0] = current.atck;
-				inputArr [1] = current.def;
-				inputArr [2] = current.pos.x;
-				inputArr [3] = current.pos.y;
-				int sX = 10;
-				int sY = 10;
-				for (int i = 0; i < sX; ++i) {
-					for (int j = 0; j < sY; ++j) {
-						inputArr [i * sY + j + 4] = maps.attack [i, j];
-					}
-				}
-				int desp = 4 + sX * sY;
-				for (int i = 0; i < sX; ++i) {
-					for (int j = 0; j < sY; ++j) {
-						inputArr [i * sY + j + desp] = maps.defense [i, j];
-					}
-				}
-				*/
 				box.Activate ();
 				ISignalArray outputArr = box.OutputSignalArray;
 
@@ -70,19 +52,6 @@ public class clanNEAT : UnitController {
 				else if (pos == 6) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (-1, 1));
 				else if (pos == 7) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (0,  1));
 				else if (pos == 8) transform.GetComponent<clanController> ().move (currentWarrior, new Vector2 (1,  1));
-
-				
-
-				//++currentWarrior;
-				/*	var steer = (float)outputArr[0] * 2 - 1;
-        var gas = (float)outputArr[1] * 2 - 1;
-
-        var moveDist = gas * Speed * Time.deltaTime;
-        var turnAngle = steer * TurnSpeed * Time.deltaTime * gas;
-
-        transform.Rotate(new Vector3(0, turnAngle, 0));
-        transform.Translate(Vector3.forward * moveDist);	 
-    */	
 			} 
 			userBlock = false;
 			++currentWarrior;

@@ -26,7 +26,7 @@ public class Controller : MonoBehaviour {
 
 	Vector3 pos = new Vector3(0,0,0);
 	Vector3 desp = new Vector3(11,0,0);
-	gridCreator grid;
+	public gridCreator grid;
 	// Use this for initialization
 
 	struct game {
@@ -43,7 +43,7 @@ public class Controller : MonoBehaviour {
 
 
 	void Start(){
-		grid = new gridCreator ();
+	//	grid = new gridCreator ();
 		games = new game[10000];
 		pos -= desp;
 	}

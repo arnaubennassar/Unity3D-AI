@@ -10,7 +10,7 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
-	const int NUM_INPUTS  = 25;	//10x10 map attack + 10x10 map defense + current{x,y,atk,def}	
+	const int NUM_INPUTS  = 17;	//10x10 map attack + 10x10 map defense + current{x,y,atk,def}	
 	const int NUM_OUTPUTS = 9;	// move forward/backard, left/rigt and attack.
 
     public int Trials;

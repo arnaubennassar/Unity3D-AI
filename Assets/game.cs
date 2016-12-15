@@ -12,7 +12,7 @@ public class game : MonoBehaviour {
 	public Sprite baseB;
 	public Sprite warriorImgA;
 	public Sprite warriorImgB;
-	gridCreator grid;
+	public gridCreator grid;
 	GameObject ui;
 	public Controller cont;
 	// Use this for initialization
@@ -27,7 +27,7 @@ public class game : MonoBehaviour {
 			clanA = GameObject.FindGameObjectWithTag ("Finish").GetComponent<Optimizer> ().customRB ();//Instantiate (clan) as GameObject;
 			clanB = GameObject.FindGameObjectWithTag ("Finish").GetComponent<Optimizer> ().customRB ();//Instantiate (clan) as GameObject;
 
-			grid = new gridCreator ();
+			//grid = new gridCreator ();
 			grid.createGrid (new Vector3 (0.5f, -20, 0), 10, 10, Color.white, Color.blue, 0, baseA, baseB);
 			clanA.GetComponent<clanController> ().origin = new Vector3 (0f, -20, 0);
 			clanA.GetComponent<clanController> ().dOrigin = new Vector3 (0.1f, 0, 0); 

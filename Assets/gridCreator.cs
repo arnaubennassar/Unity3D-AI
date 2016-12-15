@@ -10,14 +10,14 @@ public class gridCreator : MonoBehaviour {
 	public Color colorB = Color.white;
 	*/
 
-	Shader shad;
+	public Shader shad;
 
 	// Use this for initialization
 	public void createGrid (Vector3 ori, int rows, int cols, Color colorA, Color colorB, int num, Sprite baseA, Sprite baseB) {
 		GameObject board = new GameObject ();
 		board.transform.name = "BOARD_" + num.ToString ();
 		Vector3 pos = ori;
-		shad = Shader.Find("Unlit/Color");
+		//shad = Shader.Find("Unlit/Color");
 		Vector3 rowIncrease = new Vector3 (1, 0, 0);
 		Vector3 colIncrease = new Vector3 (0, 1, 0);
 		bool colorAorBcol = true;

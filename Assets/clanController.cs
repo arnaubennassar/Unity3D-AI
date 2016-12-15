@@ -24,7 +24,12 @@ public class clanController : MonoBehaviour {
 	public Vector3 deathPosition;
 	public Sprite warriorImg;
 	public bool isUser = false;
-
+	float fit = 0;
+	float lastavg = 15;
+	float lastwbalance = 0;
+	float lastbbalance = 0;
+	bool isFirst = true;
+	bool permaZero = false;
 
 	int dangerRad = 10;
 
@@ -197,8 +202,8 @@ public class clanController : MonoBehaviour {
 				--aliveWarriors;
 				return auxDmg;
 			}
-		} else if (Vector2.Distance (pos, basePos) < 1.5f) {
-			Debug.Log ("making damage to the base");
+		} else if (Vector2.Distance (pos, basePos) < 1) {
+			Debug.Log ("making damage to the base... distance == " + Vector2.Distance (pos, basePos));
 			basePower -= dmg;
 			return dmg;
 		}
@@ -287,7 +292,7 @@ public class clanController : MonoBehaviour {
 		float ret = 0;
 		int tw = enemy.GetComponent<clanController> ().totalWarriors;
 		for (int i = 0; i < tw; ++i) {
-			if (Vector2.Distance (pos, enemy.GetComponent<clanController> ().warriors [i].pos) <= dangerRad) {
+			if (Vector2.Distance (pos, enemy.GetComponent<clanController> ().warriors [i].pos) <= dangerRad && enemy.GetComponent<clanController> ().warriors [i].def > 0) {
 				ret += enemy.GetComponent<clanController> ().warriors [i].atck / Vector2.Distance (pos, enemy.GetComponent<clanController> ().warriors [i].pos);
 			}
 		}
@@ -298,7 +303,7 @@ public class clanController : MonoBehaviour {
 		float ret = 0;
 		int tw = totalWarriors;
 		for (int i = 0; i < tw; ++i) {
-			if (Vector2.Distance (pos, warriors [i].pos) <= dangerRad) {
+			if (Vector2.Distance (pos, warriors [i].pos) <= dangerRad && warriors [i].def > 0) {
 				ret += warriors [i].atck / Vector2.Distance (pos, warriors [i].pos);
 			}
 		}
@@ -306,7 +311,7 @@ public class clanController : MonoBehaviour {
 	}
 
 	public float[] getInput (int id){
-		float[] ret = new float[25];
+		float[] ret = new float[17];
 		Vector2 pos = warriors [id].pos;
 		Vector2 eBase = enemy.GetComponent<clanController> ().basePos;
 		int i = 0;
@@ -317,33 +322,28 @@ public class clanController : MonoBehaviour {
 			if (i != 4) {
 				Vector2 vaux = pos + new Vector2 (i % 3 - 1, i / 3 - 1);
 				if (checkLimits (vaux)) {
-					ret [i * 3 + 0] = (1 / Vector2.Distance (new Vector2 (), eBase)) * 100;	//distance to eBase
-					ret [i * 3 + 1] = getDanger(id, vaux);									//danger
-					ret [i * 3 + 2] = getSuperiority(vaux);									//superiority
+					ret [i * 2 + 0] = (1 / Vector2.Distance (new Vector2 (), eBase)) * 100;	//distance to eBase
+					ret [i * 2 + 1] = getSuperiority(vaux) - getDanger(id, vaux);			//attack balance
 				} else {
-					ret [i * 3 + 0] = 0;
-					ret [i * 3 + 1] = 0;
-					ret [i * 3 + 2] = 0;
+					ret [i * 2 + 0] = 0;
+					ret [i * 2 + 1] = 0;
 				}
 			}
 		}
-		if (enemy.GetComponent<clanController>().getDamage(pos, 0) == 0) ret [24] = 100;	//attack input
-		else ret [24] = 0;
+		if (enemy.GetComponent<clanController>().getDamage(pos, 0) == 0) ret [16] = 100;	//attack input
+		else ret [16] = 0;
 		return ret;
 	}
 
 	public float fitness (int id){
-
-		float fit = 0;
 		if (started) {
 			float aux = 0;
 			if (lastMove == -1)
-				aux += 1000;
-			else if (lastAttack == 1)
-				aux = -1;
-			lastMove = 0;
-			lastAttack = 0;
-			fit -= aux;
+				aux -= 150f;
+			else if (lastAttack == -1)
+				aux -= 150;
+		//	lastMove = 0;
+		//	lastAttack = 0;	
 
 			//AVG distance of warriors to enemy Base
 			Vector2 eBase = enemy.GetComponent<clanController> ().basePos;
@@ -356,24 +356,47 @@ public class clanController : MonoBehaviour {
 				}
 			}
 			avgD = avgD / count;
-			if (avgD != 0)
-				fit += 100 / avgD;
+		//	fit += lastavg - avgD;
+		//	lastavg = avgD;
 
-			fit += (float)basePower - (float)enemy.GetComponent<clanController> ().basePower ;
+			int auxB = Math.Max(0, getBP() ) - Mathf.Max(0, enemy.GetComponent<clanController> ().getBP()) ;
+		//	fit += auxB - lastbbalance;
+		//	lastbbalance = auxB;
 
-			float difPwr = (float)(totalAtckPwr + totalDefPwr) - (float)(enemy.GetComponent<clanController> ().totalAtckPwr + enemy.GetComponent<clanController> ().totalDefPwr);
-			fit += difPwr;	
-			if (enemy.GetComponent<clanController> ().getBP() == 0) {
+			int difPwr = (totalAtckPwr + totalDefPwr) - (enemy.GetComponent<clanController> ().totalAtckPwr + enemy.GetComponent<clanController> ().totalDefPwr);
+		//	fit += difPwr - lastwbalance;
+		//	lastwbalance = difPwr;
+
+
+			Debug.Log ("fit params: "+avgD + " "+ difPwr+" "+ auxB+" "+aux);
+			fit =  Mathf.Min(699,  Mathf.Min (500, 700 / (Mathf.Max (0.001f, avgD))) + difPwr  + auxB/* + aux*/); 
+			if (lastMove == -1) {
+			//	fit = 0;
+				permaZero = true;
+			} else if (lastAttack == -1) {
+			//	fit = 0;
+				permaZero = true;
+			}
+		//	if (permaZero)
+		//		fit = 0;
+			lastMove = 0;
+			lastAttack = 0;	
+			if (enemy.GetComponent<clanController> ().getBP() <= 0) {
 				Debug.Log ("GG \n\n\n\n\n\n");
-				return 10000;
-			} else if (basePower == 0) {
+				return 700;
+			} else if (basePower <= 0) {
 				Debug.Log ("DAAAAAMM ");
 				return 0;
 			}	
+
 		}
-		if (float.IsInfinity (fit))
-			Debug.Log ("wat da fak" + fit);
-		return Mathf.Max(0, fit);
+		fit = Mathf.Max(0, fit);
+	//	if (isFirst) {
+	//		fit = 0;
+	//		isFirst = false;
+	//	}
+		Debug.Log("fit value: "+fit);
+		return fit;
 	}
 
 	public int getBP(){
