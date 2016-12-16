@@ -73,6 +73,19 @@ public class game : MonoBehaviour {
 	public void right () {
 		clanB.GetComponent<clanNEAT> ().Right ();
 	}
+	public void upR () {
+		clanB.GetComponent<clanNEAT> ().UpRight ();
+	}
+	public void downL () {
+		clanB.GetComponent<clanNEAT> ().DownLeft ();
+	}
+	public void uleft () {
+		clanB.GetComponent<clanNEAT> ().UpLeft ();
+	}
+	public void dright () {
+		clanB.GetComponent<clanNEAT> ().DownRight ();
+	}
+
 	public void attack () {
 		clanB.GetComponent<clanNEAT> ().Attack ();
 	}
